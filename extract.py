@@ -90,29 +90,34 @@ def main(school, queries):
                 print(f"\t\tCreated {'/'.join(data_path.parts[-4:])}...")
 
                 if list(filter(is_date_param, query_params.keys())):
-                    print(f"\t\tGenerating historical queries...")
+                    print("\t\tGenerating historical queries...")
                     for i, y in enumerate(
                         range(first_academic_year, current_academic_year)
                     ):
                         hist_query = generate_historical_query(q, i)
                         school_queries.append(hist_query)
 
-            if query_params_fmt:
-                data_filename = f"{endpt_name}_{school_name}_{query_params_fmt}.json.gz"
-            else:
-                data_filename = f"{endpt_name}_{school_name}.json.gz"
-            data_filepath = data_path / data_filename
+            if endpt_data:
+                if query_params_fmt:
+                    data_filename = (
+                        f"{endpt_name}_{school_name}_{query_params_fmt}.json.gz"
+                    )
+                else:
+                    data_filename = f"{endpt_name}_{school_name}.json.gz"
+                data_filepath = data_path / data_filename
 
-            ## save to json.gz
-            with gzip.open(data_filepath, "wt", encoding="utf-8") as f:
-                json.dump(endpt_data, f)
-            print(f"\t\tSaved to {'/'.join(data_filepath.parts[-5:])}!")
+                ## save to json.gz
+                with gzip.open(data_filepath, "wt", encoding="utf-8") as f:
+                    json.dump(endpt_data, f)
+                print(f"\t\tSaved to {'/'.join(data_filepath.parts[-5:])}!")
 
-            ## upload to GCS
-            destination_blob_name = f"deanslist/{'/'.join(data_filepath.parts[-4:])}"
-            blob = GCS_BUCKET.blob(destination_blob_name)
-            blob.upload_from_filename(data_filepath)
-            print(f"\t\tUploaded to {destination_blob_name}!")
+                ## upload to GCS
+                destination_blob_name = (
+                    f"deanslist/{'/'.join(data_filepath.parts[-4:])}"
+                )
+                blob = GCS_BUCKET.blob(destination_blob_name)
+                blob.upload_from_filename(data_filepath)
+                print(f"\t\tUploaded to {destination_blob_name}!")
         except Exception as xc:
             print(xc)
             continue
