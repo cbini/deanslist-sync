@@ -41,18 +41,18 @@ endpoint_queries = [
     {
         "name": "followups",
         "path": "v1/followups",
-        # "parameters": {
-        #     "iuid": "",
-        #     "cuid": "",
-        #     "sid": "",
-        #     "out": "",
-        #     "type": "",
-        # },
+        "parameters": {
+            "iuid": "",
+            "cuid": "",
+            "sid": "",
+            "out": "",
+            "type": "",
+        },
     },
     {
         "name": "roster_assignments",
         "path": "beta/export/get-roster-assignments.php",
-        # "parameters": {"rt": ""},
+        "parameters": {"rt": ""},
     },
     {
         "name": "incidents",
@@ -85,59 +85,59 @@ endpoint_queries = [
             "IncludeDeleted": "Y",
         },
     },
-    # {
-    #     "name": "points_bank_book",
-    #     "path": "beta/bank/get-bank-book.php",
-    #     "parameters": {
-    #         "rid": "",
-    #         "sid": "",
-    #         "stus": "",
-    #     },
-    # },
-    # {
-    #     "name": "message_center_events",
-    #     "path": "v1/connect/events",
-    #     "parameters": {
-    #         "StartDate": "",
-    #         "EndDate": "",
-    #     },
-    # },
-    # {
-    #     "name": "students",
-    #     "path": "v1/students",
-    #     "parameters": {
-    #         "StudentID": "",
-    #         "IncludeParents": "",
-    #         "IncludeUnenrolled": "",
-    #     },
-    # },
-    # {
-    #     "name": "daily_attendance",
-    #     "path": "v1/daily-attendance",
-    #     "parameters": {
-    #         "sdt": "",
-    #         "edt": "",
-    #         "UpdatedSince": "",
-    #         "include_iac": "",
-    #     },
-    # },
-    # {
-    #     "name": "class_attendance",
-    #     "path": "v1/class-attendance",
-    #     "parameters": {
-    #         "sdt": "",
-    #         "edt": "",
-    #         "UpdatedSince": "",
-    #     },
-    # },
-    # {
-    #     "name": "meals",
-    #     "path": "v1/meals",
-    #     "parameters": {
-    #         "MealID": "",
-    #         "RosterID": "",
-    #         "sdt": "",
-    #         "edt": "",
-    #     },
-    # },
+    {
+        "name": "points_bank_book",
+        "path": "beta/bank/get-bank-book.php",
+        "parameters": {
+            "rid": "",
+            "sid": "",
+            "stus": "",
+        },
+    },
+    {
+        "name": "message_center_events",
+        "path": "v1/connect/events",
+        "parameters": {
+            "StartDate": "",
+            "EndDate": "",
+        },
+    },
+    {
+        "name": "students",
+        "path": "v1/students",
+        "parameters": {
+            "StudentID": "",
+            "IncludeParents": "",
+            "IncludeUnenrolled": "",
+        },
+    },
+    {
+        "name": "daily_attendance",
+        "path": "v1/daily-attendance",
+        "parameters": {
+            "sdt": "",
+            "edt": "",
+            "UpdatedSince": "",
+            "include_iac": "",
+        },
+    },
+    {
+        "name": "class_attendance",
+        "path": "v1/class-attendance",
+        "parameters": {
+            "sdt": "",
+            "edt": "",
+            "UpdatedSince": "",
+        },
+    },
+    {
+        "name": "meals",
+        "path": "v1/meals",
+        "parameters": {
+            "MealID": "",
+            "RosterID": "",
+            "sdt": "",
+            "edt": "",
+        },
+    },
 ]
