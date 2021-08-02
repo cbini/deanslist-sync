@@ -15,15 +15,15 @@ from settings import current_academic_year, endpoint_queries, first_academic_yea
 
 load_dotenv()
 
-gcs_bucket_name = os.getenv("GCS_BUCKET_NAME")
-instance_name = os.getenv("INSTANCE_NAME")
-dl_app_creds = os.getenv("DEANSLIST_APPLICATION_CREDENTIALS")
-project_path = pathlib.Path(__file__).absolute().parent
+GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
+INSTANCE_NAME = os.getenv("INSTANCE_NAME")
+DL_APP_CREDS = os.getenv("DEANSLIST_APPLICATION_CREDENTIALS")
 
-BASE_URL = f"https://{instance_name}.deanslistsoftware.com/api"
+PROJECT_PATH = pathlib.Path(__file__).absolute().parent
+BASE_URL = f"https://{INSTANCE_NAME}.deanslistsoftware.com/api"
 
-gcs_storage_client = storage.Client()
-gcs_bucket = gcs_storage_client.bucket(gcs_bucket_name)
+GCS_STORAGE_CLIENT = storage.Client()
+GCS_BUCKET = GCS_STORAGE_CLIENT.bucket(GCS_BUCKET_NAME)
 
 
 def get_endpoint_data(path, params):
@@ -42,6 +42,11 @@ def is_date_param(key):
     return key in ["StartDate", "EndDate", "sdt", "edt"]
 
 
+def update_param_val(val, decrement):
+    new_val = datetime.strptime(val, "%Y-%m-%d") - relativedelta(years=(decrement + 1))
+    return new_val.strftime("%Y-%m-%d")
+
+
 def generate_historical_query(endpoint, decrement):
     new_endpt = copy.deepcopy(endpoint)
     new_params = new_endpt.pop("parameters")
@@ -57,21 +62,13 @@ def generate_historical_query(endpoint, decrement):
     return new_endpt
 
 
-def update_param_val(val, decrement):
-    new_val = datetime.strptime(val, "%Y-%m-%d") - relativedelta(years=(decrement + 1))
-    return new_val.strftime("%Y-%m-%d")
-
-
-with open(dl_app_creds) as f:
-    api_keys = json.load(f)
-
-for school in api_keys:
+def main(school, queries):
     school_region = school["region-name"]
     school_name = school["school-name"]
     api_key = school["key"]
     print(f"{school_region} - {school_name}")
 
-    school_queries = copy.deepcopy(endpoint_queries)
+    school_queries = copy.deepcopy(queries)
     for q in school_queries:
         endpt_name = q.get("name", {})
         endpt_path = q.get("path")
@@ -85,9 +82,9 @@ for school in api_keys:
 
         try:
             print(f"\t\tGET {endpt_path}")
-            # endpt_data = get_endpoint_data(endpt_path, query_params)
+            endpt_data = get_endpoint_data(endpt_path, query_params)
 
-            data_path = project_path / "data" / school_region / endpt_name / school_name
+            data_path = PROJECT_PATH / "data" / school_region / endpt_name / school_name
             if not data_path.exists():
                 data_path.mkdir(parents=True)
                 print(f"\t\tCreated {'/'.join(data_path.parts[-4:])}...")
@@ -107,15 +104,23 @@ for school in api_keys:
             data_filepath = data_path / data_filename
 
             ## save to json.gz
-            # with gzip.open(data_filepath, "wt", encoding="utf-8") as f:
-            #     json.dump(endpt_data, f)
+            with gzip.open(data_filepath, "wt", encoding="utf-8") as f:
+                json.dump(endpt_data, f)
             print(f"\t\tSaved to {'/'.join(data_filepath.parts[-5:])}!")
 
             ## upload to GCS
             destination_blob_name = f"deanslist/{'/'.join(data_filepath.parts[-4:])}"
-            # blob = gcs_bucket.blob(destination_blob_name)
-            # blob.upload_from_filename(data_filepath)
+            blob = GCS_BUCKET.blob(destination_blob_name)
+            blob.upload_from_filename(data_filepath)
             print(f"\t\tUploaded to {destination_blob_name}!")
         except Exception as xc:
             print(xc)
             continue
+
+
+if __name__ == "__main__":
+    with open(DL_APP_CREDS) as f:
+        api_keys = json.load(f)
+
+    for school in api_keys:
+        main(school, endpoint_queries)
