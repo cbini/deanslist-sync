@@ -120,12 +120,18 @@ def main(school, queries):
                 print(f"\t\tUploaded to {destination_blob_name}!")
         except Exception as xc:
             print(xc)
+            print(traceback.format_exc())
             continue
 
 
 if __name__ == "__main__":
-    with open(DL_APP_CREDS) as f:
-        api_keys = json.load(f)
+    try:
+        with open(DL_APP_CREDS) as f:
+            api_keys = json.load(f)
 
-    for school in api_keys:
-        main(school, endpoint_queries)
+        for school in api_keys:
+            main(school, endpoint_queries)
+    except Exception as xc:
+        print(xc)
+        print(traceback.format_exc())
+        
