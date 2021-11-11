@@ -7,7 +7,7 @@ authors = ["Charlie Bini <5003326+cbini@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 python-dateutil = "^2.8.2"
-python-dotenv = "^0.19.1"
+python-dotenv = "^0.19.2"
 requests = "^2.26.0"
 google-cloud-storage = "^1.42.3"
 
