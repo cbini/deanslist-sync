@@ -106,12 +106,12 @@ def main(school, queries):
                     data_filename = f"{endpt_name}_{school_name}.json.gz"
                 data_filepath = data_path / data_filename
 
-                ## save to json.gz
+                # save to json.gz
                 with gzip.open(data_filepath, "wt", encoding="utf-8") as f:
                     json.dump(endpt_data, f)
                 print(f"\t\tSaved to {'/'.join(data_filepath.parts[-5:])}!")
 
-                ## upload to GCS
+                # upload to GCS
                 destination_blob_name = (
                     f"deanslist/{'/'.join(data_filepath.parts[-4:])}"
                 )
@@ -134,4 +134,3 @@ if __name__ == "__main__":
     except Exception as xc:
         print(xc)
         print(traceback.format_exc())
-        

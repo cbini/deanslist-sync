@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
-from dateutil import tz
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,7 +10,7 @@ local_tz = os.getenv("LOCAL_TIMEZONE")
 current_academic_year = int(os.getenv("CURRENT_ACADEMIC_YEAR"))
 first_academic_year = int(os.getenv("FIRST_ACADEMIC_YEAR"))
 
-now = datetime.now(tz=tz.gettz(local_tz)).date()
+now = datetime.now(tz=ZoneInfo(local_tz)).date()
 updated_since = now - timedelta(days=3)
 updated_since_strf = updated_since.strftime("%Y-%m-%d")
 ay_start_date = f"{current_academic_year}-07-01"
