@@ -8,12 +8,9 @@ from datetime import datetime
 
 import requests
 from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv
 from google.cloud import storage
 
 from settings import current_academic_year, endpoint_queries, first_academic_year
-
-load_dotenv()
 
 GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
 INSTANCE_NAME = os.getenv("INSTANCE_NAME")
