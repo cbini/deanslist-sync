@@ -2,10 +2,6 @@ import os
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 local_tz = os.getenv("LOCAL_TIMEZONE")
 current_academic_year = int(os.getenv("CURRENT_ACADEMIC_YEAR"))
 first_academic_year = int(os.getenv("FIRST_ACADEMIC_YEAR"))
