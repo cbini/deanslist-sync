@@ -28,5 +28,5 @@ build-backend = "pdm.pep517.api"
 
 [tool.pdm.scripts]
 _.env_file = ".env"
-extract = { call = "deanslist_sync.extract:main" }
+extract = { shell = "python deanslist_sync/extract.py" }
 post_lock = { shell = "pdm export -f requirements > requirements.txt" }

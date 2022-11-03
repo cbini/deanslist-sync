@@ -11,19 +11,16 @@ from dateutil.relativedelta import relativedelta
 from google.cloud import storage
 from settings import current_academic_year, endpoint_queries, first_academic_year
 
-GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
-INSTANCE_NAME = os.getenv("INSTANCE_NAME")
-DL_APP_CREDS = os.getenv("DEANSLIST_APPLICATION_CREDENTIALS")
-
-PROJECT_PATH = pathlib.Path(__file__).absolute().parent
-BASE_URL = f"https://{INSTANCE_NAME}.deanslistsoftware.com/api"
-
 GCS_STORAGE_CLIENT = storage.Client()
-GCS_BUCKET = GCS_STORAGE_CLIENT.bucket(GCS_BUCKET_NAME)
+GCS_BUCKET = GCS_STORAGE_CLIENT.bucket(os.getenv("GCS_BUCKET_NAME"))
+
+SCRIPT_DIR = pathlib.Path(__file__).absolute().parent
 
 
 def get_endpoint_data(path, params):
-    response = requests.get(url=f"{BASE_URL}/{path}", params=params)
+    base_url = f"https://{os.getenv('INSTANCE_NAME')}.deanslistsoftware.com/api"
+
+    response = requests.get(url=f"{base_url}/{path}", params=params)
     response.raise_for_status()
 
     response_json = response.json()
@@ -80,7 +77,7 @@ def main(school, queries):
             print(f"\t\tGET {endpt_path}")
             endpt_data = get_endpoint_data(endpt_path, query_params)
 
-            data_path = PROJECT_PATH / "data" / school_region / endpt_name / school_name
+            data_path = SCRIPT_DIR / "data" / school_region / endpt_name / school_name
             if not data_path.exists():
                 data_path.mkdir(parents=True)
                 print(f"\t\tCreated {'/'.join(data_path.parts[-4:])}...")
@@ -122,11 +119,11 @@ def main(school, queries):
 
 if __name__ == "__main__":
     try:
-        with open(DL_APP_CREDS) as f:
+        with open(os.getenv("DEANSLIST_APPLICATION_CREDENTIALS")) as f:
             api_keys = json.load(f)
 
         for school in api_keys:
-            main(school, endpoint_queries)
+            main(school=school, queries=endpoint_queries)
     except Exception as xc:
         print(xc)
         print(traceback.format_exc())
